@@ -4,6 +4,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.media.AudioManager;
 import android.content.Context;
+import android.widget.SeekBar;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,6 +24,11 @@ public class MainActivity extends AppCompatActivity {
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         int x = audioManager.getStreamVolume(15);
         return x;
+    }
+
+    public int volumeChange(){
+        SeekBar volumeControl = (SeekBar) findViewById(R.id.volumeBar);
+        return volumeControl.getProgress();
     }
 
 
