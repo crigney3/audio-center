@@ -5,36 +5,61 @@ import android.os.Bundle;
 import android.media.AudioManager;
 import android.content.Context;
 import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 
 
 public class MainActivity extends AppCompatActivity {
-
-    AudioManager audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        normalizeAudio(getVolume());
+        volumeControl = (SeekBar) findViewById(R.id.volumeBar);
+        volumeControl.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+
+             @Override
+             public void onStopTrackingTouch(SeekBar seekBar) {
+                 // TODO Auto-generated method stub
+             }
+
+             @Override
+             public void onStartTrackingTouch(SeekBar seekBar) {
+                 // TODO Auto-generated method stub
+             }
+
+             @Override
+             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                 // TODO Auto-generated method stub
+                userVolume = progress;
+                System.out.println(userVolume);
+                normalizeAudio(userVolume);
+             }
+         });
+
     }
+
+    AudioManager audioManager;
+    SeekBar volumeControl;
+    int userVolume = 50;
 
     //Volume currently playing
     public int getVolume(){
-        setVolumeControlStream(AudioManager.STREAM_MUSIC);
-        int x = audioManager.getStreamVolume(15);
+        audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+        setVolumeControlStream(audioManager.STREAM_MUSIC);
+        int x = audioManager.getStreamVolume(audioManager.STREAM_MUSIC);
         return x;
     }
 
     public int volumeChange(){
-        SeekBar volumeControl = (SeekBar) findViewById(R.id.volumeBar);
+        volumeControl = (SeekBar) findViewById(R.id.volumeBar);
         return volumeControl.getProgress();
     }
 
 
     //Change volume to what the user requests, based on what's currently playing
     public void normalizeAudio(int decibelLevel){
-        audioManager.setStreamVolume(15,decibelLevel,0);
+        audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+        audioManager.setStreamVolume(audioManager.STREAM_MUSIC,decibelLevel,0);
     }
 
 }
